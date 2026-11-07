@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ROS 2
+build/
+install/
+log/
+
+# Local files
+*.log
+*.tmp
+.cache/
+.ros/
+
+# Credentials
+.env
+.env.*
+*.key
+*.pem
+
+# Editors
+.vscode/
+.idea/
