@@ -245,3 +245,32 @@ and have not yet been completed.
 ## License
 
 License selection pending.
+
+---
+
+## Project Demonstration
+
+### SLAM Mapping Screenshots
+
+The following screenshots document the real-time 2D SLAM
+mapping experiments performed with the TurtleBot3 Waffle Pi.
+
+**SLAM Mapping — Screenshot 1**
+
+![SLAM Mapping 1](media/screenshots/slam_map_01.png)
+
+**SLAM Mapping — Screenshot 2**
+
+![SLAM Mapping 2](media/screenshots/slam_map_02.png)
+
+**SLAM Mapping — Screenshot 3**
+
+![SLAM Mapping 3](media/screenshots/slam_map_03.png)
+
+### YouTube Demonstration
+
+Watch the real-hardware TurtleBot3 demonstration:
+
+[![Watch TurtleBot3 Demonstration](https://img.youtube.com/vi/znKcMcm2jNY/hqdefault.jpg)](https://youtu.be/znKcMcm2jNY)
+
+**[Watch Demonstration on YouTube](https://youtu.be/znKcMcm2jNY)**
