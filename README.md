@@ -8,8 +8,8 @@ The project focuses on real-time indoor mapping, autonomous
 navigation, and future camera-based laboratory inspection.
 
 > **Project Status:** Active Development
-> **Current Milestone:** Real-time 2D SLAM implemented and demonstrated
-> **Next Milestone:** Nav2 autonomous navigation
+> **Current Milestone:** Physical TurtleBot3 Nav2 goal navigation demonstrated (12 November 2026; multiple runs reported)
+> **Next Milestone:** Camera livestream and waypoint-based laboratory inspection
 
 ## Project Objectives
 
@@ -41,7 +41,7 @@ navigation, and future camera-based laboratory inspection.
 - Python
 - SLAM Toolbox
 - RViz2
-- Nav2 (planned)
+- Nav2 (map server, AMCL, planner, MPPI, velocity smoother, collision monitor)
 - RTAB-Map (future development)
 
 ## System Architecture
@@ -149,7 +149,17 @@ slam/
 rviz/
   tb3_mapping.rviz
 
+navigation/
+  config/
+    nav2_params.yaml
+  maps/
+    lab_map_2026_11_12.pgm
+    lab_map_2026_11_12.yaml
+
 docs/
+  nav2_quickstart.md
+  navigation_experiment_2026-11-12.md
+
 media/
 ```
 
@@ -191,6 +201,44 @@ source /opt/ros/jazzy/setup.bash
 rviz2 -d rviz/tb3_mapping.rviz
 ```
 
+## Real-World Nav2 Navigation (12 November 2026)
+
+The physical TurtleBot3 Waffle Pi completed **multiple autonomous navigation runs**, as reported by the project lead, using a saved 2D map, AMCL localization, and the Nav2 stack. A video demonstration is available:
+
+**[Watch the autonomous navigation video (YouTube Shorts)](https://youtube.com/shorts/Oj6nLm5XzTM)**
+
+The Nov 12 map (`navigation/maps/lab_map_2026_11_12.pgm` and `.yaml`) contains a 762 × 238 occupancy grid at 0.05 m/cell. The image's 38.1 × 11.9 m grid extent is **not** a measurement of fully explored free space. SLAM Toolbox posegraph/data were also successfully serialized and retained locally.
+
+### Saved-map navigation architecture
+
+```text
+Pi: OpenCR / wheel odometry + LDS-02 laser /scan
+                        |
+                        v
+Laptop: /scan_normalized -> AMCL + saved-map Map Server
+                             |
+RViz 2D initial pose -> map/odom/base_footprint TF
+                             |
+RViz Navigation2 Goal -> BT Navigator -> Planner
+                             |
+MPPI Controller -> /cmd_vel_nav -> Velocity Smoother
+                             |
+                  /cmd_vel_smoothed
+                             |
+                    Collision Monitor
+                             |
+               /cmd_vel (TwistStamped) -> OpenCR
+```
+
+**Important:** SLAM mapping and AMCL saved-map localization are different runtime modes. Do not run competing `map -> odom` sources. The Pi's custom bringup source will be added after a future laboratory visit; it is not yet in this public repository.
+
+- **[Nav2 startup and verification guide](docs/nav2_quickstart.md)** — full terminal-by-terminal runbook.
+- **[12 Nov navigation experiment record](docs/navigation_experiment_2026-11-12.md)** — mapping evidence, user-reported runs, known limitations and next measurements.
+- **[New occupancy map](navigation/maps/lab_map_2026_11_12.yaml)** — YAML metadata, paired with the PGM image.
+- **[Nav2 configuration](navigation/config/nav2_params.yaml)** — tested configuration snapshot.
+
+**Evidence boundary:** The linked video is demonstration evidence, not quantitative validation of navigation success rate, final-pose accuracy, collision avoidance or safety-system reliability. Earlier forward/back alignment issues require controlled re-verification after reassembly.
+
 ## Development Roadmap
 
 ### v0.1 - ROS 2 SLAM Baseline
@@ -202,14 +250,14 @@ rviz2 -d rviz/tb3_mapping.rviz
 - [x] Real-time SLAM
 - [x] RViz visualization
 - [ ] Publish complete Raspberry Pi bringup source
-- [ ] Export and verify saved occupancy grid map files
+- [x] Export and verify saved occupancy grid map files
 
 ### v1.0 - Autonomous Navigation
 
-- [ ] Nav2 integration
-- [ ] AMCL localization
-- [ ] Global and local costmaps
-- [ ] Autonomous goal navigation
+- [x] Nav2 integration
+- [x] AMCL localization
+- [x] Global and local costmaps
+- [x] Autonomous goal navigation (multiple physical runs reported; demo linked below)
 - [ ] Obstacle avoidance testing
 - [ ] Multi-waypoint navigation
 - [ ] Full laboratory demonstration
@@ -239,8 +287,8 @@ high-performance robotic communication.
 ## Project Status
 
 This is an ongoing undergraduate robotics development project.
-Autonomous navigation and inspection features are planned
-and have not yet been completed.
+Autonomous navigation has been demonstrated on the physical robot.
+Camera-based autonomous inspection and controlled performance benchmarking remain planned.
 
 ## License
 
